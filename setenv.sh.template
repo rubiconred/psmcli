@@ -1,0 +1,4 @@
+export PSM_USERNAME=craig.barr@rubiconred.com
+export PSM_PASSWORD=OMITTED
+export PSM_IDENTITY_DOMAIN=OMITTED
+export PSM_REGION=aucom
