@@ -3,5 +3,5 @@ COPY psmcli.zip .
 RUN pip3 install -U psmcli.zip
 COPY docker-entrypoint.sh .
 RUN chmod +x docker-entrypoint.sh
-ENTRYPOINT ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["psm"]

@@ -17,7 +17,7 @@ PSM_CONFIG=$(cat <<ENDOFTEMPLATE
 ENDOFTEMPLATE
 )
 echo $PSM_CONFIG > /tmp/psm.json
-psm setup -c /tmp/psm.json
+psm setup -c /tmp/psm.json > /dev/null
 rm /tmp/psm.json
-psm update
+psm update > /dev/null
 exec "$@"
