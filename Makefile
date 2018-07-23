@@ -1,16 +1,22 @@
+include environment
+
 build: psmcli.zip
 	docker build -t craigbarrau/psm-cli .
 
-psmcli.zip:
-	curl -X GET -u ${PSM_USERNAME}:${PSM_PASSWORD} -H X-ID-TENANT-NAME:${PSM_IDENTITY_DOMAIN} https://psm.${PSM_REGION}.oraclecloud.com/paas/core/api/v1.1/cli/${PSM_IDENTITY_DOMAIN}/client -o psmcli.zip
+download: psmcli.zip
+	@curl -X GET -u $(PSM_USERNAME):$(PSM_PASSWORD) -H X-ID-TENANT-NAME:$(PSM_IDENTITY_DOMAIN) https://psm.$(PSM_REGION).oraclecloud.com/paas/core/api/v1.1/cli/$(PSM_IDENTITY_DOMAIN)/client -o psmcli.zip
+	@cp psmcli.zip `unzip -qql psmcli.zip | head -n1 | tr -s ' ' | cut -d ' ' -f5- | cut -d '/' -f1`.zip
 
-run:
-	docker run -ti \
-	-e PSM_IDENTITY_DOMAIN=${PSM_IDENTITY_DOMAIN} \
-	-e PSM_USERNAME=${PSM_USERNAME} \
-	-e PSM_PASSWORD=${PSM_PASSWORD} \
-	-e PSM_REGION=${PSM_REGION} \
-	craigbarrau/psm-cli /bin/sh
+show_latest:
+	@curl -X GET -u $(PSM_USERNAME):$(PSM_PASSWORD) -H X-ID-TENANT-NAME:$(PSM_IDENTITY_DOMAIN) https://psm.$(PSM_REGION).oraclecloud.com/paas/core/api/v1.1/cli/$(PSM_IDENTITY_DOMAIN)/client -o temp
+	@unzip -qql psmcli.zip | head -n1 | tr -s ' ' | cut -d ' ' -f5- | cut -d '/' -f1
+	@rm temp
+
+load_secrets:
+	docker swarm init
+	@printf $(PSM_IDENTITY_DOMAIN) | docker secret create psm.identitydomain -
+	@printf $(PSM_USERNAME) | docker secret create psm.username -
+	@printf $(PSM_PASSWORD) | docker secret create psm.password -
 
 clean:
-	rm psmcli.zip	
+	rm psmcli*.zip
