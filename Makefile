@@ -1,10 +1,10 @@
-DOCKER_NAMESPACE=craigbarrau
+DOCKER_NAMESPACE=rubiconxred
 PSM_VERSION := $(shell unzip -qql psmcli.zip | head -n1 | tr -s ' ' | cut -d ' ' -f5- | cut -d '-' -f2 | cut -d '/' -f1)
 
 include environment
 
 build: psmcli.zip
-	docker build -t $(DOCKER_NAMESPACE)/psm-cli .
+	docker build -t $(DOCKER_NAMESPACE)/psm .
 
 download: psmcli.zip
 	@curl -X GET -u $(PSM_USERNAME):$(PSM_PASSWORD) -H X-ID-TENANT-NAME:$(PSM_IDENTITY_DOMAIN) https://psm.$(PSM_REGION).oraclecloud.com/paas/core/api/v1.1/cli/$(PSM_IDENTITY_DOMAIN)/client -o psmcli.zip
@@ -25,6 +25,6 @@ clean:
 	rm psmcli*.zip
 
 push:
-	docker tag $(DOCKER_NAMESPACE)/psm-cli $(DOCKER_NAMESPACE)/psm-cli:$(PSM_VERSION)
-	docker push $(DOCKER_NAMESPACE)/psm-cli:$(PSM_VERSION)
-	docker push $(DOCKER_NAMESPACE)/psm-cli
+	docker tag $(DOCKER_NAMESPACE)/psm $(DOCKER_NAMESPACE)/psm:$(PSM_VERSION)
+	docker push $(DOCKER_NAMESPACE)/psm:$(PSM_VERSION)
+	docker push $(DOCKER_NAMESPACE)/psm
